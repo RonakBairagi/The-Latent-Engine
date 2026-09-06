@@ -116,8 +116,6 @@ $$\Delta_i = \mathbb{I}\left(\hat{y}_i \neq y_i^*\right)$$
 Because the explainer uses standard modern ES6 modules with zero external npm dependencies, it runs instantly on any machine with Python:
 
 ```bash
-# Clone or navigate to the project directory
-cd "c:\Users\RONAK\New folder (2)"
 
 # Start Python's built-in HTTP server
 python -m http.server 8000
