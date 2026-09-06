@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Latent Engine | Recurrent Latent Reasoning in Pathway BDH-CQ</title>
+  <meta name="description" content="An interactive computational explainer for IIT KGP DataForge 2026 / NeurIPS 2026 Education Track. Explore recurrent latent-space reasoning, inference-time scaling, and biological 5% sparsity in Pathway's BDH-CQ architecture.">
+  <meta name="keywords" content="Pathway, BDH, BDH-CQ, Baby Dragon Hatchling, Recurrent Latent Reasoning, ARC-AGI, Sudoku Extreme, Inference-Time Scaling, NeurIPS 2026">
+  <meta name="author" content="IIT KGP DataForge 2026 - Pathway Track">
+
+  <!-- Core & Component Stylesheets -->
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- ====================================================================
+         HEADER & HERO
+         ==================================================================== -->
+    <header class="header-hero">
+      <div class="header-top">
+        <div class="brand-badge-group">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <h1>The Latent Engine</h1>
+            <div class="brand-subtitle">
+              <span>Pathway BDH-CQ Recurrent Latent-Space Reasoning</span>
+              <span class="badge-tag">NeurIPS 2026 Education Track</span>
+              <span class="badge-tag live-indicator">Live Engine Active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-outline-cyan" id="btnHeaderSandbox">
+            <span>🧪</span> Jump to Free Sandbox
+          </button>
+        </div>
+      </div>
+
+      <!-- Falsifiable Claim Callout Banner -->
+      <div class="claim-banner" role="region" aria-label="Falsifiable Scientific Claim">
+        <div class="claim-icon" aria-hidden="true">⚖️</div>
+        <div class="claim-content">
+          <div class="claim-label">
+            <span>Falsifiable Scientific Claim</span>
+            <span class="metric-pill info" style="padding: 0.1rem 0.4rem; font-size: 0.68rem;">Verified Substrate</span>
+          </div>
+          <div class="claim-text">
+            &ldquo;Increasing recurrent inference steps in a fixed-size latent-space network systematically improves accuracy on abstract spatial transformations (ARC) without expanding sequence length or KV-cache footprint, but encounters steep Pareto diminishing returns in latency past a critical compute threshold.&rdquo;
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         NAVIGATION / MODE SWITCHER TABS
+         ==================================================================== -->
+    <nav class="mode-tabs-container" aria-label="Explainer Modes">
+      <div class="tab-pill-group" role="tablist">
+        <button class="tab-btn active" data-tab="guide" role="tab" id="tabGuide" aria-selected="true">
+          <span>📖</span> Guided Walkthrough <span class="badge-count">5 Steps</span>
+        </button>
+        <button class="tab-btn" data-tab="sandbox" role="tab" id="tabSandbox" aria-selected="false">
+          <span>🧪</span> Computational Sandbox
+        </button>
+        <button class="tab-btn" data-tab="architecture" role="tab" id="tabArchitecture" aria-selected="false">
+          <span>🐉</span> Pathway BDH-CQ Deep-Dive
+        </button>
+      </div>
+
+      <!-- Live Resource Performance HUD -->
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <div class="metric-pill success" id="badgeAccuracy">
+          <span>Accuracy:</span> <strong id="valAccuracy">100%</strong>
+        </div>
+        <div class="metric-pill">
+          <span>Latency:</span> <strong id="valLatency">6.5 ms</strong>
+        </div>
+        <div class="metric-pill">
+          <span>Memory:</span> <strong id="valMemory">256 B</strong>
+        </div>
+        <div class="metric-pill info">
+          <span>Cost/Task:</span> <strong id="valCost">$0.0007</strong>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ====================================================================
+         MAIN INTERFACE (Two-Column Responsive Grid)
+         ==================================================================== -->
+    <main class="main-grid two-column-layout">
+      
+      <!-- ================================================================
+           LEFT COLUMN: CONTROLS & BENCHMARK SUITE
+           ================================================================ -->
+      <aside class="controls-card glass-card">
+        
+        <div class="card-header">
+          <div class="card-title-group">
+            <span style="font-size: 1.2rem;">🎛️</span>
+            <div>
+              <h3>Inference Controls</h3>
+              <div class="card-subtitle">Real mathematical variables mapped live</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reasoning Paradigm Toggle -->
+        <div class="control-group">
+          <label class="control-label">
+            <span>Reasoning Paradigm</span>
+          </label>
+          <div class="toggle-group">
+            <button class="toggle-option-btn active" id="btnModeLatent">
+              <span>🌀 BDH-CQ Latent</span>
+              <span class="toggle-subtext">Recurrent O(1) Memory</span>
+            </button>
+            <button class="toggle-option-btn" id="btnModeCot">
+              <span>💬 Token CoT</span>
+              <span class="toggle-subtext">Serial O(N) Tokens</span>
+            </button>
+          </div>
+          <div class="control-desc">
+            Compare BDH-CQ's continuous internal state updates against traditional token-by-token Chain of Thought.
+          </div>
+        </div>
+
+        <!-- Slider 1: Recurrent Inference Steps (Compute Allocation K) -->
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label" for="sliderStepsK">
+              <span>Recurrent Steps (K)</span>
+            </label>
+            <span class="control-value-badge" id="valSliderK">8</span>
+          </div>
+          <input type="range" class="range-slider" id="sliderStepsK" min="1" max="16" value="8" step="1">
+          <div class="slider-scale-ticks">
+            <span>K=1 (Coarse)</span>
+            <span>K=8 (Optimal)</span>
+            <span>K=16 (Saturation)</span>
+          </div>
+          <div class="control-desc">
+            Allocates test-time compute loops. High values allow attractor relaxation to resolve spatial constraints.
+          </div>
+        </div>
+
+        <!-- Slider 2: BDH Biological Sparsity Threshold -->
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label" for="sliderSparsity">
+              <span>BDH Biological Sparsity</span>
+            </label>
+            <span class="control-value-badge" id="valSliderSparsity">5%</span>
+          </div>
+          <input type="range" class="range-slider cyan" id="sliderSparsity" min="0.01" max="0.25" value="0.05" step="0.01">
+          <div class="slider-scale-ticks">
+            <span>1% (Ultra-Sparse)</span>
+            <span>5% (BDH Biological Prior)</span>
+            <span>25% (Dense)</span>
+          </div>
+          <div class="control-desc">
+            Pathway's Dragon Hatchling principle: restricts firing to top ~5% units for monosemantic stability.
+          </div>
+        </div>
+
+        <!-- Slider 3: Noise / Perturbation Sigma -->
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label" for="sliderNoise">
+              <span>Input Perturbation (&sigma;)</span>
+            </label>
+            <span class="control-value-badge" id="valSliderNoise">0.00</span>
+          </div>
+          <input type="range" class="range-slider" id="sliderNoise" min="0.0" max="1.0" value="0.0" step="0.05">
+          <div class="slider-scale-ticks">
+            <span>&sigma;=0.0 (Clean)</span>
+            <span>&sigma;=0.5 (Corrupted)</span>
+            <span>&sigma;=1.0 (Stress Test)</span>
+          </div>
+          <div class="control-desc">
+            Injects Gaussian noise into the initial latent state to test attractor basin robustness.
+          </div>
+        </div>
+
+        <!-- Benchmark Task Selector -->
+        <div class="control-group" style="margin-top: 0.5rem;">
+          <div class="control-header">
+            <label class="control-label">
+              <span>Canonical Benchmark Tasks</span>
+            </label>
+          </div>
+          <div class="task-pill-list" id="taskPillList">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ================================================================
+           RIGHT COLUMN: DYNAMIC CONTENT AREA
+           ================================================================ -->
+      <section class="main-content-flow" style="display: flex; flex-direction: column; gap: 1.75rem;">
+
+        <!-- 1. GUIDED LESSON STEPPER CONTAINER -->
+        <div id="sectionGuide" class="guide-container">
+          <div class="stepper-header">
+            <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cyan);">
+              Interactive Structured Walkthrough
+            </span>
+            <div class="stepper-dots" id="stepperDots">
+              <!-- Dynamically generated dots -->
+            </div>
+          </div>
+          
+          <div id="guideStepCard" class="guide-step-card">
+            <!-- Dynamically populated by guide.js -->
+          </div>
+        </div>
+
+        <!-- 2. TRUTH BESIDE ESTIMATE SUITE (Core Learning Artifact) -->
+        <div class="glass-card highlight-cyan">
+          
+          <div class="card-header">
+            <div class="card-title-group">
+              <span style="font-size: 1.3rem;">👁️</span>
+              <div>
+                <h3 id="activeTaskTitle">Spatial Reflection & Polarity</h3>
+                <div class="card-subtitle" id="activeTaskDescription">
+                  Reflect spatial geometry across the central vertical axis with chromatic polarity inversion.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="metric-pill">Cross-Entropy Loss: <strong id="valLoss" style="color: var(--cyan);">0.012</strong></span>
+              <span class="metric-pill">Mismatches: <strong id="valMismatches" style="color: var(--amber);">0 / 25</strong></span>
+            </div>
+          </div>
+
+          <!-- Interactive Grid Painter Tools (Visible in Sandbox Mode) -->
+          <div id="customEditorTools" class="editor-toolbar" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1rem;">
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Brush Palette:</span>
+              <div class="color-swatch-picker" id="colorSwatchPicker"></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button class="btn btn-secondary" id="btnClearGrid" style="font-size: 0.76rem; padding: 0.35rem 0.7rem;">Clear</button>
+              <button class="btn btn-secondary" id="btnRandomizeGrid" style="font-size: 0.76rem; padding: 0.35rem 0.7rem;">Randomize</button>
+              <button class="btn btn-secondary" id="btnInvertGrid" style="font-size: 0.76rem; padding: 0.35rem 0.7rem;">Invert Colors</button>
+              <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 0.5rem;">Click any cell in "Input Prompt Grid" to paint</span>
+            </div>
+          </div>
+
+          <!-- The 4 Side-by-Side Panels -->
+          <div class="truth-estimate-wrapper">
+            <div class="tbe-panels-grid">
+              
+              <!-- Panel 1: Input Grid -->
+              <div class="tbe-panel">
+                <div class="tbe-panel-header">
+                  <span class="tbe-panel-title">1. Input Prompt Grid (x)</span>
+                  <span style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted);">t = 0</span>
+                </div>
+                <div class="tbe-grid-container" id="gridInput"></div>
+              </div>
+
+              <!-- Panel 2: Live Model Estimate -->
+              <div class="tbe-panel panel-estimate">
+                <div class="tbe-panel-header">
+                  <span class="tbe-panel-title">2. Live Model Estimate (ŷ)</span>
+                  <span style="font-size: 0.7rem; font-family: var(--font-mono); color: #a5b4fc;">z^(K) Decoded</span>
+                </div>
+                <div class="tbe-grid-container" id="gridEstimate"></div>
+              </div>
+
+              <!-- Panel 3: Ground Truth Target -->
+              <div class="tbe-panel panel-truth">
+                <div class="tbe-panel-header">
+                  <span class="tbe-panel-title">3. Ground Truth (y*)</span>
+                  <span style="font-size: 0.7rem; font-family: var(--font-mono); color: #6ee7b7;">Target Solution</span>
+                </div>
+                <div class="tbe-grid-container" id="gridTruth"></div>
+              </div>
+
+              <!-- Panel 4: Discrepancy Heatmap -->
+              <div class="tbe-panel panel-delta">
+                <div class="tbe-panel-header">
+                  <span class="tbe-panel-title">4. Discrepancy Heatmap (Δ)</span>
+                  <span style="font-size: 0.7rem; font-family: var(--font-mono); color: #fcd34d;">Error Residual</span>
+                </div>
+                <div class="tbe-grid-container" id="gridDelta"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. LATENT STATE VECTOR & BIOLOGICAL SPARSITY HEATMAP -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span style="font-size: 1.25rem;">🧬</span>
+              <div>
+                <h3>Latent State Trajectory & 5% Non-Negative Sparsity</h3>
+                <div class="card-subtitle">Visualizing internal activations across recurrent steps k = 0 to K (D=64 neurons)</div>
+              </div>
+            </div>
+            <div class="latent-stats-row">
+              <div class="latent-stat-item">
+                <span class="latent-stat-label">Active Firing:</span>
+                <span class="latent-stat-val" id="valActiveSparsity">5% (~3 units)</span>
+              </div>
+              <div class="latent-stat-item">
+                <span class="latent-stat-label">Inhibited (Zero):</span>
+                <span class="latent-stat-val" style="color: #94a3b8;">95% (Lateral Inhibition)</span>
+              </div>
+              <div class="latent-stat-item">
+                <span class="latent-stat-label">Representation:</span>
+                <span class="latent-stat-val" style="color: #6ee7b7;">Monosemantic</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="latent-vector-panel">
+            <div class="canvas-wrapper">
+              <canvas id="latentCanvas" width="700" height="130"></canvas>
+              <div class="canvas-legend">
+                <span><span class="legend-swatch" style="background: #090d16; border: 1px solid #334155;"></span> 0.0 (Inhibited / Sleep)</span>
+                <span><span class="legend-swatch" style="background: #312e81;"></span> Sub-threshold Activation</span>
+                <span><span class="legend-swatch" style="background: #6366f1;"></span> Moderate Recurrent Signal</span>
+                <span><span class="legend-swatch" style="background: #38bdf8; box-shadow: 0 0 6px #38bdf8;"></span> Top 5% Sparse Firing (BDH Monosemantic Synapse)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. CHAIN-OF-THOUGHT (CoT) COUNTERFACTUAL CARD -->
+        <div class="glass-card highlight-primary" id="cotComparisonCard" style="display: none;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span style="font-size: 1.25rem;">💬</span>
+              <div>
+                <h3 style="color: #c7d2fe;">Counterfactual Analysis: Token Chain-of-Thought (CoT) Tax</h3>
+                <div class="card-subtitle">What happens if a traditional Transformer attempts this reasoning via verbal text?</div>
+              </div>
+            </div>
+            <span class="badge-tag" style="background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); color: #fda4af;">
+              O(N) Token Memory Expansion
+            </span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+            <div style="background: #060913; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Verbal CoT Tokens Emitted:</div>
+              <div style="font-size: 1.25rem; font-family: var(--font-mono); font-weight: 700; color: #f87171;" id="cotTokens">510 tokens</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Forced 1D text serialization</div>
+            </div>
+            <div style="background: #060913; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">KV-Cache Memory Overhead:</div>
+              <div style="font-size: 1.25rem; font-family: var(--font-mono); font-weight: 700; color: #f59e0b;" id="cotKvCache">32.6 MB</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Scales linearly with sequence length</div>
+            </div>
+            <div style="background: #060913; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Serial Generation Latency:</div>
+              <div style="font-size: 1.25rem; font-family: var(--font-mono); font-weight: 700; color: #fb7185;" id="cotLatency">7,395 ms</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Memory bandwidth bottleneck</div>
+            </div>
+            <div style="background: #060913; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Inference Cost per Task:</div>
+              <div style="font-size: 1.25rem; font-family: var(--font-mono); font-weight: 700; color: #e879f9;" id="cotCost">$0.0250</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">~35x more expensive than BDH-CQ</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. PARETO FRONTIER COMPUTATIONAL SCALING CHART -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span style="font-size: 1.25rem;">📈</span>
+              <div>
+                <h3>Empirical Pareto Frontier: Accuracy vs Latency</h3>
+                <div class="card-subtitle">Demonstrating rapid convergence and steep diminishing returns past critical threshold K*</div>
+              </div>
+            </div>
+            <span class="badge-tag">Theoretical & Live Mapping</span>
+          </div>
+
+          <div class="pareto-chart-container">
+            <div class="chart-svg-box" id="paretoChartSvg">
+              <!-- SVG dynamically rendered by charts.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. PATHWAY BDH & BDH-CQ ARCHITECTURE MODULE (Mounted dynamically) -->
+        <div id="sectionArchitecture" style="display: none;"></div>
+        <div id="bdhModuleContainer"></div>
+
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         FOOTER & CITATIONS
+         ==================================================================== -->
+    <footer class="app-footer">
+      <div class="footer-meta">
+        <span>🏆 <strong>IIT KGP DataForge 2026</strong> (Pathway Track)</span>
+        <span>🎓 Aligned with <strong>NeurIPS 2026 Education Track</strong></span>
+        <span>⚡ Built with Zero-Dependency Client-Side Computational Substrate</span>
+      </div>
+      <p style="font-size: 0.78rem; max-width: 800px; line-height: 1.5; color: var(--text-muted);">
+        References: Kosowski et al. &ldquo;The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain&rdquo; (arXiv:2509.26507) & Pathway BDH-CQ Technical Report (August 2026).
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- Application Scripts (Modern ES6 Modules) -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,718 @@
+/* ==========================================================================
+   THE LATENT ENGINE - Component Styles
+   Truth-Beside-Estimate, ARC Grid, Heatmap, Controls, Stepper & Charts
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TRUTH BESIDE ESTIMATE MULTI-PANEL VIEW
+   ========================================================================== */
+.truth-estimate-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.tbe-panels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.tbe-panel {
+  background: rgba(13, 18, 32, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  position: relative;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(12px);
+}
+
+.tbe-panel:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.tbe-panel.panel-estimate {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.06) 0%, rgba(13, 18, 32, 0.95) 100%);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.12);
+}
+
+.tbe-panel.panel-truth {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, rgba(13, 18, 32, 0.95) 100%);
+}
+
+.tbe-panel.panel-delta {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, rgba(13, 18, 32, 0.95) 100%);
+}
+
+.tbe-panel-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.tbe-panel-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.panel-estimate .tbe-panel-title { color: #a5b4fc; }
+.panel-truth .tbe-panel-title { color: #6ee7b7; }
+.panel-delta .tbe-panel-title { color: #fcd34d; }
+
+.tbe-grid-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  position: relative;
+}
+
+/* ==========================================================================
+   2. ARC SPATIAL GRID RENDERING & PALETTE
+   ========================================================================== */
+.arc-grid {
+  display: grid;
+  background-color: #04060a;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  gap: 2px;
+  user-select: none;
+}
+
+.arc-cell {
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  position: relative;
+  cursor: default;
+}
+
+.arc-grid.interactive .arc-cell {
+  cursor: pointer;
+}
+
+.arc-grid.interactive .arc-cell:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Standard ARC-AGI Official 10-Color Palette */
+.arc-color-0 { background-color: #000000; color: #475569; } /* Black / Background */
+.arc-color-1 { background-color: #0074D9; color: #ffffff; } /* Blue */
+.arc-color-2 { background-color: #FF4136; color: #ffffff; } /* Red */
+.arc-color-3 { background-color: #2ECC40; color: #000000; } /* Green */
+.arc-color-4 { background-color: #FFDC00; color: #000000; } /* Yellow */
+.arc-color-5 { background-color: #AAAAAA; color: #000000; } /* Grey */
+.arc-color-6 { background-color: #F012BE; color: #ffffff; } /* Fuschia / Magenta */
+.arc-color-7 { background-color: #FF851B; color: #000000; } /* Orange */
+.arc-color-8 { background-color: #7FDBFF; color: #000000; } /* Teal */
+.arc-color-9 { background-color: #870C25; color: #ffffff; } /* Maroon / Brown */
+
+/* Discrepancy / Error Glow styling */
+.arc-cell.cell-mismatch {
+  position: relative;
+  box-shadow: inset 0 0 0 2px #f43f5e, 0 0 8px rgba(244, 63, 94, 0.7);
+  animation: mismatch-pulse 1.4s infinite;
+}
+
+.arc-cell.cell-mismatch::after {
+  content: '!';
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 0.65rem;
+  color: #ffffff;
+  font-weight: 900;
+  text-shadow: 0 0 3px #000;
+}
+
+@keyframes mismatch-pulse {
+  0% { box-shadow: inset 0 0 0 2px #f43f5e, 0 0 4px rgba(244, 63, 94, 0.5); }
+  50% { box-shadow: inset 0 0 0 2.5px #ff758f, 0 0 12px rgba(244, 63, 94, 0.9); }
+  100% { box-shadow: inset 0 0 0 2px #f43f5e, 0 0 4px rgba(244, 63, 94, 0.5); }
+}
+
+.arc-cell.cell-match {
+  box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.4);
+}
+
+/* Delta Grid heatmap styling */
+.delta-cell-match {
+  background-color: #0b1a13 !important;
+  color: #10b981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.delta-cell-error {
+  background-color: #3b0c16 !important;
+  color: #ff6b8b !important;
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  font-weight: 800;
+}
+
+/* Cell hover tooltip */
+.cell-tooltip {
+  position: absolute;
+  bottom: -32px;
+  background: rgba(4, 7, 15, 0.95);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  z-index: 50;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   3. CONTROLS HUD & INTERACTIVE SLIDERS
+   ========================================================================== */
+.controls-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.control-value-badge {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cyan);
+  background: rgba(6, 182, 212, 0.12);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+/* Custom Slider Styling */
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: #1e293b;
+  outline: none;
+  transition: background var(--transition-fast);
+  cursor: pointer;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.9);
+}
+
+.range-slider.cyan::-webkit-slider-thumb {
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+}
+
+.range-slider.cyan::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.9);
+}
+
+.slider-scale-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
+/* Control helpers & toggles */
+.control-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Reasoning Mode Toggle Button Group */
+.toggle-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(10, 14, 25, 0.9);
+  padding: 0.3rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  gap: 0.3rem;
+}
+
+.toggle-option-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.toggle-option-btn.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.2) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(99, 102, 241, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.toggle-subtext {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  opacity: 0.75;
+}
+
+/* Task Selector Pills */
+.task-pill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.task-pill:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.task-pill.active {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+}
+
+.task-pill-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-pill-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.task-pill-rule {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.task-pill-tag {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   4. LATENT STATE VECTOR & SPARSITY HEATMAP
+   ========================================================================== */
+.latent-vector-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.latent-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.latent-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.latent-stat-label {
+  color: var(--text-muted);
+}
+
+.latent-stat-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.canvas-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #03060c;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+canvas#latentCanvas {
+  width: 100%;
+  max-width: 100%;
+  height: 140px;
+  image-rendering: pixelated;
+}
+
+.canvas-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  width: 100%;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+}
+
+/* ==========================================================================
+   5. GUIDED LESSON STEPPER & NARRATIVE
+   ========================================================================== */
+.guide-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stepper-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.stepper-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stepper-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.stepper-dot:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.stepper-dot.active {
+  background: var(--primary);
+  border-color: #a5b4fc;
+  color: #ffffff;
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.stepper-dot.completed {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--emerald);
+  color: var(--emerald);
+}
+
+.guide-step-card {
+  background: linear-gradient(145deg, rgba(16, 22, 38, 0.9) 0%, rgba(10, 14, 25, 0.95) 100%);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.guide-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cyan);
+}
+
+.guide-step-card h3 {
+  font-size: 1.35rem;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.guide-step-body {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #cbd5e1;
+}
+
+.guide-step-body strong {
+  color: #ffffff;
+}
+
+.guide-step-body .formula-box {
+  background: #060912;
+  border-left: 3px solid var(--primary);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: #e0e7ff;
+}
+
+.guide-action-prompt {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px dashed rgba(99, 102, 241, 0.4);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.guide-action-icon {
+  font-size: 1.35rem;
+}
+
+.guide-action-text {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+
+.guide-footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   6. PARETO FRONTIER & COMPARISON METRICS CHARTS
+   ========================================================================== */
+.pareto-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chart-svg-box {
+  width: 100%;
+  height: 280px;
+  background: #03060c;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+  position: relative;
+}
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.comparison-table th {
+  background: rgba(16, 22, 38, 0.95);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-display);
+}
+
+.comparison-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-highlight);
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-table tr.highlight-bdh {
+  background: rgba(6, 182, 212, 0.08);
+}
+
+.comparison-table tr.highlight-bdh td {
+  color: #a5f3fc;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   7. CUSTOM ARC GRID PAINTER TOOLBAR
+   ========================================================================== */
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.color-swatch-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.color-swatch-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.color-swatch-btn:hover {
+  transform: scale(1.2);
+}
+
+.color-swatch-btn.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 6px #ffffff;
+  transform: scale(1.15);
+}
+
+/* ==========================================================================
+   8. SYNAPTIC PLASTICITY & HEBBIAN INSPECTOR
+   ========================================================================== */
+.synapse-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  padding: 8px;
+  background: #04060b;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.synapse-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background-color: #0d1322;
+  transition: background-color 0.2s ease;
+}
